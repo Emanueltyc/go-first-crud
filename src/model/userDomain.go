@@ -3,12 +3,18 @@ package model
 import (
 	"crypto/md5"
 	"encoding/hex"
-
-	"github.com/Emanueltyc/go-first-crud/src/configuration/restERR"
 )
 
+type UserDomainInterface interface {
+	GetEmail() string
+	GetPassword() string
+	GetAge() int8
+
+	EncryptPassword()
+}
+
 func NewUserDomain(email, password, name string, age int8) UserDomainInterface {
-	return &UserDomain{
+	return &userDomain{
 		email,
 		password,
 		name,
@@ -16,23 +22,32 @@ func NewUserDomain(email, password, name string, age int8) UserDomainInterface {
 	}
 }
 
-type UserDomain struct {
-	Email    string
-	Password string
-	Name     string
-	Age      int8
+type userDomain struct {
+	email    string
+	password string
+	name     string
+	age      int8
 }
 
-func (ud *UserDomain) EncryptPassword() {
+func (ud *userDomain) GetEmail() string {
+	return ud.email
+}
+
+func (ud *userDomain) GetPassword() string {
+	return ud.password
+}
+
+func (ud *userDomain) GetName() string {
+	return ud.name
+}
+
+func (ud *userDomain) GetAge() int8 {
+	return ud.age
+}
+
+func (ud *userDomain) EncryptPassword() {
 	hash := md5.New()
 	defer hash.Reset()
-	hash.Write([]byte(ud.Password))
-	ud.Password = hex.EncodeToString(hash.Sum(nil))
-}
-
-type UserDomainInterface interface {
-	CreateUser() *restERR.RestErr
-	UpdateUser(string) *restERR.RestErr
-	FindUser(string) (*UserDomain, *restERR.RestErr)
-	DeleteUser(string) *restERR.RestErr
+	hash.Write([]byte(ud.password))
+	ud.password = hex.EncodeToString(hash.Sum(nil))
 }
