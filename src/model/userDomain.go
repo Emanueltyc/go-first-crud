@@ -7,6 +7,7 @@ import (
 
 type UserDomainInterface interface {
 	GetEmail() string
+	GetName() string
 	GetPassword() string
 	GetAge() int8
 
